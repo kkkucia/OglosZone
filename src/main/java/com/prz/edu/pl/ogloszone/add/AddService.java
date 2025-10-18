@@ -171,7 +171,7 @@ public class AddService {
                 .map(AddResponse::new);
     }
 
-    private Add getExistingAdd(UUID id, UUID editCode) {
+    Add getExistingAdd(UUID id, UUID editCode) {
         logger.debug("Checking existence of announcement with ID: {} and editCode: {}", id, editCode);
         Optional<Add> existing = repository.findById(id.toString());
         if (existing.isEmpty()) {
@@ -185,7 +185,7 @@ public class AddService {
         return currentAdd;
     }
 
-    private Category validateCategory(String categoryName) {
+    Category validateCategory(String categoryName) {
         logger.debug("Validating category: {}", categoryName);
         if (categoryName == null || categoryName.trim().isEmpty()) {
             logger.warn("Category is null or empty");
