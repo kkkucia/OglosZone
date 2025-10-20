@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/adds")
+@RequestMapping("/api/add")
 public class AddController {
 
     private final AddService service;
