@@ -4,9 +4,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.util.List;
 
-public record PagedResponse<T>(
+public record PagedResponse<AddResponse>(
         @Schema(description = "List of items on the current page")
-        List<T> content,
+        List<com.prz.edu.pl.ogloszone.add.AddResponse> content,
 
         @Schema(description = "Current page number (zero-based), where page=0 is the first page",
                 example = "0")
