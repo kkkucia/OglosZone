@@ -1,27 +1,28 @@
-FROM maven:3.9.5-eclipse-temurin-21 AS build
+FROM maven:3.9.9-eclipse-temurin-21 AS builder
 
 WORKDIR /app
+
 
 COPY pom.xml .
+
+RUN mvn dependency:go-offline -B
+
 COPY src ./src
 
-RUN mvn clean package -DskipTests
+RUN mvn clean package -DskipTests -B
 
-FROM eclipse-temurin:21-jre
+FROM eclipse-temurin:21-jre-alpine
 
 WORKDIR /app
 
-COPY --from=build /app/target/ogloszone-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=builder /app/target/ogloszone-*.jar app.jar
 
-RUN ls -R /app
-
-
-ENV JAVA_OPTS=""
-
-ENV MONGODB_URI=""
-ENV MAIL=""
-ENV MAIL_PASSWORD=""
-
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar", "--spring.profiles.active=prod"]
+HEALTHCHECK --interval=30s --timeout=3s --start-period=60s --retries=3 \
+  CMD wget -qO- http://localhost:8080/actuator/health || exit 1
 
 EXPOSE 8080
+
+ENV JAVA_OPTS="-Xmx512m -Xms256m"
+ENV SPRING_PROFILES_ACTIVE=prod
+
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar --spring.profiles.active=$SPRING_PROFILES_ACTIVE"]
