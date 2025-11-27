@@ -1,23 +1,22 @@
-FROM eclipse-temurin:21.0.5_11-jre-alpine AS build
+FROM maven:3.9.9-eclipse-temurin-21 AS builder
+
 WORKDIR /app
 
 COPY pom.xml .
+RUN mvn dependency:go-offline -B
+
 COPY src ./src
 
 RUN mvn clean package
 
-FROM eclipse-temurin:21-jre
+FROM eclipse-temurin:21.0.5_11-jre-alpine
+
 WORKDIR /app
 
-COPY --from=build /app/target/*.jar app.jar
-
-ENV JAVA_OPTS=""
-ENV MONGODB_URI=""
-ENV MAIL=""
-ENV MAIL_PASSWORD=""
-
-ENV SPRING_PROFILES_ACTIVE=prod
-
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
+COPY --from=builder /app/target/*.jar app.jar
 
 EXPOSE 8080
+
+ENV JAVA_OPTS="-Xmx512m -Xms256m"
+
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
