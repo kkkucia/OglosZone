@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.2.0</version>
+		<version>3.2.5</version>
 		<relativePath/>
 	</parent>
 
@@ -20,41 +20,20 @@
 
 	<properties>
 		<java.version>21</java.version>
+		<springdoc.version>2.6.0</springdoc.version>
+		<mongodb-driver.version>5.2.0</mongodb-driver.version>
 	</properties>
 
 	<dependencies>
 
-		<!-- Swagger UI / OpenAPI -->
-		<dependency>
-			<groupId>org.springdoc</groupId>
-			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-			<version>2.3.0</version>
-		</dependency>
-
-		<!-- Actuator -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
-		</dependency>
-
-		<!-- Web REST -->
+		<!-- Spring Boot Web -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
-		<!-- MongoDB -->
-<!--		<dependency>-->
-<!--			<groupId>org.springframework.boot</groupId>-->
-<!--			<artifactId>spring-boot-starter-data-mongodb</artifactId>-->
-<!--		</dependency>-->
-
-<!--		<dependency>-->
-<!--			<groupId>org.mongodb</groupId>-->
-<!--			<artifactId>mongodb-driver-sync</artifactId>-->
-<!--		</dependency>-->
-
-]		<dependency>
+		<!-- MongoDB – z wykluczeniem starego drivera i wymuszeniem nowego 5.2.0 -->
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-mongodb</artifactId>
 			<exclusions>
@@ -72,11 +51,12 @@
 		<dependency>
 			<groupId>org.mongodb</groupId>
 			<artifactId>mongodb-driver-sync</artifactId>
-			<version>5.2.0</version>
+			<version>${mongodb-driver.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mongodb</groupId>
 			<artifactId>mongodb-driver-core</artifactId>
+			<version>${mongodb-driver.version}</version>
 		</dependency>
 
 		<!-- Mail -->
@@ -91,7 +71,20 @@
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
 
-		<!-- Tests -->
+		<!-- Actuator -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+
+		<!-- Swagger / OpenAPI -->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>${springdoc.version}</version>
+		</dependency>
+
+		<!-- Testy -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -105,6 +98,14 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
